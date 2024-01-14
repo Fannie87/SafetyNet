@@ -12,12 +12,10 @@ public class MedicalRecord {
 	private String firstName;
 	private String lastName;
 	
-//	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	
-	
     @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     @JsonDeserialize(using = CustomDateDeserializer.class)
 	private LocalDateTime birthdate;
+    
 	private List<String> medications;
 	private List<String> allergies;
 
