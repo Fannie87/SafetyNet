@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-public class CustomDateDeserializer extends StdDeserializer<LocalDateTime> {
+public class CustomDateDeserializer extends StdDeserializer<LocalDate> {
 
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
@@ -23,10 +23,10 @@ public class CustomDateDeserializer extends StdDeserializer<LocalDateTime> {
     }
 
     @Override
-    public LocalDateTime deserialize(JsonParser jsonparser, DeserializationContext context)
+    public LocalDate deserialize(JsonParser jsonparser, DeserializationContext context)
       throws IOException, JsonProcessingException {
         String date = jsonparser.getText();
-        return LocalDate.parse(date, formatter).atStartOfDay();
+        return LocalDate.parse(date, formatter);
     }
     
 }
