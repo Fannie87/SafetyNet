@@ -7,10 +7,12 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,19 +23,25 @@ import com.safetynet.applisafety.model.Fire;
 import com.safetynet.applisafety.model.FirePerson;
 import com.safetynet.applisafety.model.FireStation;
 import com.safetynet.applisafety.model.FireStationWithCountdown;
+import com.safetynet.applisafety.model.FirstName;
+import com.safetynet.applisafety.model.FloodPerson;
 import com.safetynet.applisafety.model.MedicalRecord;
 import com.safetynet.applisafety.model.Person;
+import com.safetynet.applisafety.utils.ServiceJSON;
 
 @RestController
 public class Controller {
+	
+	private static final int AGE_MAJORITE = 18;
+	
+	
 	// 1ère URL
 	@GetMapping("/firestation")
 	// GET - /firestation/1
 	// stationNumber = 1
-	public FireStationWithCountdown fireStations(@RequestParam int stationNumber) throws IOException {
-		String content = Files.readString(Paths.get("src/main/resources/data.json"), Charset.defaultCharset());
-		ObjectMapper objectMapper = new ObjectMapper();
-		Database database = objectMapper.readValue(content, Database.class);
+	public FireStationWithCountdown fireStations(@RequestParam @NonNull Integer stationNumber) throws IOException {
+//		
+		Database database = ServiceJSON.createDatabase();
 
 		List<FireStation> firestations = database.getFirestations();
 		List<Person> persons = database.getPersons();
@@ -51,7 +59,7 @@ public class Controller {
 			}
 		}
 
-		LocalDate today = LocalDate.now().minusYears(18);
+		LocalDate today = LocalDate.now().minusYears(AGE_MAJORITE);
 		int numberMinor = 0;
 		int numberAdult = 0;
 		for (Person person : personsFiltered) {
@@ -74,17 +82,15 @@ public class Controller {
 	}
 
 	@GetMapping("/childAlert")
-	public List<ChildAlert> childAlert(String addressParam) throws IOException {
-		String content = Files.readString(Paths.get("src/main/resources/data.json"), Charset.defaultCharset());
-		ObjectMapper objectMapper = new ObjectMapper();
-		Database database = objectMapper.readValue(content, Database.class);
+	public List<ChildAlert> childAlert(@RequestParam @NonNull String addressParam) throws IOException {
+		Database database = ServiceJSON.createDatabase();
 
 		List<Person> persons = database.getPersons();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
 
 		List<ChildAlert> childAlerts = new ArrayList<>();
 
-		LocalDate dateOfMajority = LocalDate.now().minusYears(18);
+		LocalDate dateOfMajority = LocalDate.now().minusYears(AGE_MAJORITE);
 
 		for (Person person : persons) {
 			if (person.getAddress().equals(addressParam)) {
@@ -126,10 +132,8 @@ public class Controller {
 	}
 
 	@GetMapping("/phoneAlert")
-	public List<String> phoneAlert(int firestationNumber) throws IOException {
-		String content = Files.readString(Paths.get("src/main/resources/data.json"), Charset.defaultCharset());
-		ObjectMapper objectMapper = new ObjectMapper();
-		Database database = objectMapper.readValue(content, Database.class);
+	public List<String> phoneAlert(@RequestParam @NonNull Integer firestationNumber) throws IOException {
+		Database database = ServiceJSON.createDatabase();
 
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
@@ -149,11 +153,8 @@ public class Controller {
 	}
 
 	@GetMapping("/fire")
-	public  Fire fire(String address) throws IOException {
-		String content = Files.readString(Paths.get("src/main/resources/data.json"), Charset.defaultCharset());
-		ObjectMapper objectMapper = new ObjectMapper();
-		Database database = objectMapper.readValue(content, Database.class);
-
+	public Fire fire(@RequestParam @NonNull String address) throws IOException {
+		Database database = ServiceJSON.createDatabase();
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
@@ -183,25 +184,92 @@ public class Controller {
 		}
 		return fire;
 	}
-//	@GetMapping("/flood")
-//	public  Flood flood (String address) throws IOException {
-//		String content = Files.readString(Paths.get("src/main/resources/data.json"), Charset.defaultCharset());
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		Database database = objectMapper.readValue(content, Database.class);
-//
-//		List<Person> persons = database.getPersons();
-//		List<FireStation> fireStations = database.getFirestations();
-//		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
-//		
-//		for (Person person : persons) {
-//			for (MedicalRecord medicalRecord : medicalRecords) {
-//				for (FireStation fireStation : fireStations) {
-//					
-//				}
-//			}
-//			
-//		}
-//		
-//	}
 
+	// 5ème URL
+	@GetMapping("/flood/stations")
+	public Map<String, List<FloodPerson>> flood(@RequestParam @NonNull Integer stations) throws IOException {
+		Database database = ServiceJSON.createDatabase();
+
+		List<Person> persons = database.getPersons();
+		List<FireStation> fireStations = database.getFirestations();
+		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
+
+		Map<String, List<FloodPerson>> floods = new HashMap<>();
+
+		for (FireStation fireStation : fireStations) {
+			if (fireStation.getStation() == stations) {
+				for (Person person : persons) {
+					for (MedicalRecord medicalRecord : medicalRecords) {
+						if (fireStation.getAddress().equals(person.getAddress())
+								&& person.getFirstName().equals(medicalRecord.getFirstName())
+								&& person.getLastName().equals(medicalRecord.getLastName())) {
+							int age = Period.between(medicalRecord.getBirthdate(), LocalDate.now()).getYears();
+							FloodPerson floodPerson = new FloodPerson();
+
+							floodPerson.setFirstName(person.getFirstName());
+							floodPerson.setLastName(person.getLastName());
+							floodPerson.setPhone(person.getPhone());
+							floodPerson.setAge(age);
+							floodPerson.setLastName(person.getLastName());
+							floodPerson.setMedications(medicalRecord.getMedications());
+							floodPerson.setAllergies(medicalRecord.getAllergies());
+							if (floods.containsKey(person.getAddress())) {
+								floods.get(person.getAddress()).add(floodPerson);
+							} else {
+								List<FloodPerson> floodsPersons = new ArrayList<>();
+								floodsPersons.add(floodPerson);
+								floods.put(person.getAddress(), floodsPersons);
+							}
+
+						}
+					}
+				}
+			}
+		}
+		return floods;
+	}
+
+	// 6ème URL
+	@GetMapping("/personInfo")
+	public List<FirstName> personInfo(@RequestParam @NonNull String firstNameLastName) throws IOException {
+		Database database = ServiceJSON.createDatabase();
+		List<Person> persons = database.getPersons();
+		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
+		List<FirstName> firstNames = new ArrayList<>();
+
+		for (Person person : persons) {
+			for (MedicalRecord medicalRecord : medicalRecords) {
+				if (person.getFirstName().equals(medicalRecord.getFirstName())
+						&& person.getLastName().equals(medicalRecord.getLastName())) {
+					int age = Period.between(medicalRecord.getBirthdate(), LocalDate.now()).getYears();
+					FirstName firstName = new FirstName();
+
+					firstName.setFirstName(person.getFirstName());
+					firstName.setLastName(person.getLastName());
+					firstName.setAddress(person.getAddress());
+					firstName.setAge(age);
+					firstName.setEmail(person.getEmail());
+					firstName.setMedications(medicalRecord.getMedications());
+					firstName.setAllergies(medicalRecord.getAllergies());
+				}
+			}
+		}
+		return firstNames;
+	}
+
+	// 7ème URL
+	@GetMapping("/communityEmail")
+	public List<String> City(@RequestParam @NonNull String city) throws IOException {
+		Database database = ServiceJSON.createDatabase();
+
+		List<Person> persons = database.getPersons();
+		List<String> emails = new ArrayList<>();
+
+		for (Person person : persons) {
+			if (person.getCity().equals(city)) {
+				emails.add(person.getEmail());
+			}
+		}
+		return emails;
+	}
 }
