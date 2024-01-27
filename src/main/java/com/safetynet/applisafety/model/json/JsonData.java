@@ -1,8 +1,8 @@
-package com.safetynet.applisafety.model;
+package com.safetynet.applisafety.model.json;
 
 import java.util.List;
 
-public class Database {
+public class JsonData {
 	List<Person> persons;
 	List<FireStation> firestations;
 	List<MedicalRecord> medicalrecords;

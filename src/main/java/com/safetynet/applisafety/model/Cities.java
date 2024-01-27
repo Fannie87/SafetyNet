@@ -1,7 +1,5 @@
 package com.safetynet.applisafety.model;
 
-import java.util.List;
-
 public class Cities {
 	private int email;
 	private String city;

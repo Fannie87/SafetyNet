@@ -25,37 +25,20 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
-			<version>${jackson.version}</version>
 		</dependency>
-		<!--			<groupId>org.json</groupId>-->
-		<!--			<artifactId>json</artifactId>-->
-		<!--			<version>20230618</version>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>com.googlecode.json-simple</groupId>-->
-		<!--			<artifactId>json-simple</artifactId>-->
-		<!--			<version>1.1.1</version>-->
-		<!--		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>com.google.code.gson</groupId>-->
-		<!--			<artifactId>gson</artifactId>-->
-		<!--			<version>2.10.1</version>-->
-		<!--		</dependency>-->
 	</dependencies>
 	<build>
 		<plugins>

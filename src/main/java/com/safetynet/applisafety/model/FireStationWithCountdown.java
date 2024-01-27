@@ -2,6 +2,8 @@ package com.safetynet.applisafety.model;
 
 import java.util.List;
 
+import com.safetynet.applisafety.model.json.Person;
+
 public class FireStationWithCountdown {
 	private int numberMinor;
 	private int numberAdult;

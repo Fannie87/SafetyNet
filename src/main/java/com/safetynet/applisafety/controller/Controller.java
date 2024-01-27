@@ -1,11 +1,9 @@
 package com.safetynet.applisafety.controller;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,33 +14,32 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.applisafety.model.ChildAlert;
-import com.safetynet.applisafety.model.Database;
 import com.safetynet.applisafety.model.Fire;
 import com.safetynet.applisafety.model.FirePerson;
-import com.safetynet.applisafety.model.FireStation;
 import com.safetynet.applisafety.model.FireStationWithCountdown;
 import com.safetynet.applisafety.model.FirstName;
 import com.safetynet.applisafety.model.FloodPerson;
-import com.safetynet.applisafety.model.MedicalRecord;
-import com.safetynet.applisafety.model.Person;
+import com.safetynet.applisafety.model.json.FireStation;
+import com.safetynet.applisafety.model.json.JsonData;
+import com.safetynet.applisafety.model.json.MedicalRecord;
+import com.safetynet.applisafety.model.json.Person;
 import com.safetynet.applisafety.utils.ServiceJSON;
 
 @RestController
 public class Controller {
 	
 	private static final int AGE_MAJORITE = 18;
-	
+	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
 	
 	// 1ère URL
 	@GetMapping("/firestation")
 	// GET - /firestation/1
 	// stationNumber = 1
 	public FireStationWithCountdown fireStations(@RequestParam @NonNull Integer stationNumber) throws IOException {
-//		
-		Database database = ServiceJSON.createDatabase();
-
+		JsonData database = ServiceJSON.getJSONFile();
+		
 		List<FireStation> firestations = database.getFirestations();
 		List<Person> persons = database.getPersons();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
@@ -66,7 +63,7 @@ public class Controller {
 			for (MedicalRecord medicalRecord : medicalRecords) {
 				if (person.getFirstName().equals(medicalRecord.getFirstName())
 						&& person.getLastName().equals(medicalRecord.getLastName())) {
-					if (medicalRecord.getBirthdate().isAfter(today)) {// mineur
+					if (getBirthdate(medicalRecord).isAfter(today)) {// mineur
 						numberMinor++;
 					} else {
 						numberAdult++;
@@ -83,7 +80,7 @@ public class Controller {
 
 	@GetMapping("/childAlert")
 	public List<ChildAlert> childAlert(@RequestParam @NonNull String addressParam) throws IOException {
-		Database database = ServiceJSON.createDatabase();
+		JsonData database = ServiceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
@@ -97,8 +94,8 @@ public class Controller {
 				for (MedicalRecord medicalRecord : medicalRecords) {
 					if (person.getFirstName().equals(medicalRecord.getFirstName())
 							&& person.getLastName().equals(medicalRecord.getLastName())) {
-						if (medicalRecord.getBirthdate().isAfter(dateOfMajority)) {
-							int age = Period.between(medicalRecord.getBirthdate(), LocalDate.now()).getYears();
+						if (getBirthdate(medicalRecord).isAfter(dateOfMajority)) {
+							int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
 							ChildAlert childAlert = new ChildAlert();
 							childAlert.setFirstName(person.getFirstName());
 							childAlert.setLastName(person.getLastName());
@@ -115,8 +112,8 @@ public class Controller {
 					for (MedicalRecord medicalRecord : medicalRecords) {
 						if (person.getFirstName().equals(medicalRecord.getFirstName())
 								&& person.getLastName().equals(medicalRecord.getLastName())
-								&& medicalRecord.getBirthdate().isBefore(dateOfMajority)) {
-							int age = Period.between(medicalRecord.getBirthdate(), LocalDate.now()).getYears();
+								&& getBirthdate(medicalRecord).isBefore(dateOfMajority)) {
+							int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
 							ChildAlert childAlert = new ChildAlert();
 							childAlert.setFirstName(person.getFirstName());
 							childAlert.setLastName(person.getLastName());
@@ -133,7 +130,7 @@ public class Controller {
 
 	@GetMapping("/phoneAlert")
 	public List<String> phoneAlert(@RequestParam @NonNull Integer firestationNumber) throws IOException {
-		Database database = ServiceJSON.createDatabase();
+		JsonData database = ServiceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
@@ -154,7 +151,7 @@ public class Controller {
 
 	@GetMapping("/fire")
 	public Fire fire(@RequestParam @NonNull String address) throws IOException {
-		Database database = ServiceJSON.createDatabase();
+		JsonData database = ServiceJSON.getJSONFile();
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
@@ -167,7 +164,7 @@ public class Controller {
 					if (person.getAddress().equals(fireStation.getAddress()) && fireStation.getAddress().equals(address)
 							&& person.getFirstName().equals(medicalRecord.getFirstName())
 							&& person.getLastName().equals(medicalRecord.getLastName())) {
-						int age = Period.between(medicalRecord.getBirthdate(), LocalDate.now()).getYears();
+						int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
 						FirePerson firePerson = new FirePerson();
 
 						firePerson.setFirstName(person.getFirstName());
@@ -188,7 +185,7 @@ public class Controller {
 	// 5ème URL
 	@GetMapping("/flood/stations")
 	public Map<String, List<FloodPerson>> flood(@RequestParam @NonNull Integer stations) throws IOException {
-		Database database = ServiceJSON.createDatabase();
+		JsonData database = ServiceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
@@ -203,7 +200,7 @@ public class Controller {
 						if (fireStation.getAddress().equals(person.getAddress())
 								&& person.getFirstName().equals(medicalRecord.getFirstName())
 								&& person.getLastName().equals(medicalRecord.getLastName())) {
-							int age = Period.between(medicalRecord.getBirthdate(), LocalDate.now()).getYears();
+							int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
 							FloodPerson floodPerson = new FloodPerson();
 
 							floodPerson.setFirstName(person.getFirstName());
@@ -232,7 +229,7 @@ public class Controller {
 	// 6ème URL
 	@GetMapping("/personInfo")
 	public List<FirstName> personInfo(@RequestParam @NonNull String firstNameLastName) throws IOException {
-		Database database = ServiceJSON.createDatabase();
+		JsonData database = ServiceJSON.getJSONFile();
 		List<Person> persons = database.getPersons();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
 		List<FirstName> firstNames = new ArrayList<>();
@@ -241,7 +238,7 @@ public class Controller {
 			for (MedicalRecord medicalRecord : medicalRecords) {
 				if (person.getFirstName().equals(medicalRecord.getFirstName())
 						&& person.getLastName().equals(medicalRecord.getLastName())) {
-					int age = Period.between(medicalRecord.getBirthdate(), LocalDate.now()).getYears();
+					int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
 					FirstName firstName = new FirstName();
 
 					firstName.setFirstName(person.getFirstName());
@@ -260,7 +257,7 @@ public class Controller {
 	// 7ème URL
 	@GetMapping("/communityEmail")
 	public List<String> City(@RequestParam @NonNull String city) throws IOException {
-		Database database = ServiceJSON.createDatabase();
+		JsonData database = ServiceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
 		List<String> emails = new ArrayList<>();
@@ -271,5 +268,10 @@ public class Controller {
 			}
 		}
 		return emails;
+	}
+	
+	
+	private LocalDate getBirthdate(MedicalRecord medicalRecord) {
+		return LocalDate.parse(medicalRecord.getBirthdate(),formatter);
 	}
 }

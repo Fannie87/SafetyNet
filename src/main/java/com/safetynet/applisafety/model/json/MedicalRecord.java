@@ -1,20 +1,12 @@
-package com.safetynet.applisafety.model;
+package com.safetynet.applisafety.model.json;
 
-import java.time.LocalDate;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.safetynet.applisafety.utils.CustomDateDeserializer;
-import com.safetynet.applisafety.utils.CustomLocalDateTimeSerializer;
 
 public class MedicalRecord {
 	private String firstName;
 	private String lastName;
 	
-    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateDeserializer.class)
-	private LocalDate birthdate;
+	private String birthdate;
     
 	private List<String> medications;
 	private List<String> allergies;
@@ -35,11 +27,11 @@ public class MedicalRecord {
 		this.lastName = lastName;
 	}
 
-	public LocalDate getBirthdate() {
+	public String getBirthdate() {
 		return birthdate;
 	}
 
-	public void setBirthdate(LocalDate birthdate) {
+	public void setBirthdate(String birthdate) {
 		this.birthdate = birthdate;
 	}
 

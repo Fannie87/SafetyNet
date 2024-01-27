@@ -1,4 +1,4 @@
-package com.safetynet.applisafety.model;
+package com.safetynet.applisafety.model.json;
 
 public class Person {
 	private String firstName;
