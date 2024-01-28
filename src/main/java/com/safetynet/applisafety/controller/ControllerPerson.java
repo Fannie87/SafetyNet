@@ -21,7 +21,7 @@ import com.safetynet.applisafety.utils.ServiceJSON;
 public class ControllerPerson {
 
 	@PostMapping("/person")
-	JsonData postMapping(@RequestBody Person personParam) throws IOException {
+	List<Person> postMapping(@RequestBody Person personParam) throws IOException {
 		JsonData database = ServiceJSON.getJSONFile();
 		
 		database.getPersons().add(personParam);
@@ -29,11 +29,11 @@ public class ControllerPerson {
 		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 		writer.writeValue(Paths.get("src/main/resources/data.json").toFile(), database);
 
-		return database;
+		return database.getPersons();
 	}
 	
 	@PutMapping("/person")
-	JsonData putMapping(@RequestBody Person personParam) throws IOException {
+	List<Person> putMapping(@RequestBody Person personParam) throws IOException {
 		JsonData database = ServiceJSON.getJSONFile();
 		
 		List<Person> persons = database.getPersons();
@@ -52,11 +52,11 @@ public class ControllerPerson {
 		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 		writer.writeValue(Paths.get("src/main/resources/data.json").toFile(), database);
 
-		return database;
+		return database.getPersons();
 	}
 	
 	@DeleteMapping("/person")
-	JsonData deleteMapping(@RequestBody Person personParam) throws IOException {
+	List<Person> deleteMapping(@RequestBody Person personParam) throws IOException {
 		JsonData database = ServiceJSON.getJSONFile();
 		
 		List<Person> persons = database.getPersons();
@@ -71,7 +71,7 @@ public class ControllerPerson {
 		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 		writer.writeValue(Paths.get("src/main/resources/data.json").toFile(), database);
 
-		return database;
+		return database.getPersons();
 	}
 	
 }
