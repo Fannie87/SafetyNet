@@ -1,40 +1,37 @@
 package com.safetynet.applisafety.controller;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.safetynet.applisafety.config.ServiceJSON;
 import com.safetynet.applisafety.model.json.JsonData;
 import com.safetynet.applisafety.model.json.Person;
-import com.safetynet.applisafety.utils.ServiceJSON;
 
 @RestController
 public class ControllerPerson {
-
+	@Autowired
+	private ServiceJSON serviceJSON;
+	
 	@PostMapping("/person")
 	List<Person> postMapping(@RequestBody Person personParam) throws IOException {
-		JsonData database = ServiceJSON.getJSONFile();
+		JsonData database = serviceJSON.getJSONFile();
 		
 		database.getPersons().add(personParam);
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		writer.writeValue(Paths.get("src/main/resources/data.json").toFile(), database);
+		serviceJSON.updateDatabase(database);
 
 		return database.getPersons();
 	}
 	
 	@PutMapping("/person")
 	List<Person> putMapping(@RequestBody Person personParam) throws IOException {
-		JsonData database = ServiceJSON.getJSONFile();
+		JsonData database = serviceJSON.getJSONFile();
 		
 		List<Person> persons = database.getPersons();
 		for (Person person : persons) {
@@ -48,16 +45,14 @@ public class ControllerPerson {
 			}
 		}
 		
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		writer.writeValue(Paths.get("src/main/resources/data.json").toFile(), database);
+		serviceJSON.updateDatabase(database);
 
 		return database.getPersons();
 	}
 	
 	@DeleteMapping("/person")
 	List<Person> deleteMapping(@RequestBody Person personParam) throws IOException {
-		JsonData database = ServiceJSON.getJSONFile();
+		JsonData database = serviceJSON.getJSONFile();
 		
 		List<Person> persons = database.getPersons();
 		
@@ -67,9 +62,7 @@ public class ControllerPerson {
 				person.getLastName().equals(personParam.getLastName()));
 		
 		
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-		writer.writeValue(Paths.get("src/main/resources/data.json").toFile(), database);
+		serviceJSON.updateDatabase(database);
 
 		return database.getPersons();
 	}

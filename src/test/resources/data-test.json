@@ -362,11 +362,5 @@
     "birthdate" : "08/06/1945",
     "medications" : [ "tradoxidine:400mg" ],
     "allergies" : [ ]
-  }, {
-    "firstName" : "John",
-    "lastName" : "Boyd",
-    "birthdate" : "03/06/1984",
-    "medications" : [ "aznol:350mg", "hydrapermazol:100mg" ],
-    "allergies" : [ "nillacilan" ]
   } ]
 }

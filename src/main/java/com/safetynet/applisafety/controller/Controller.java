@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.safetynet.applisafety.config.ServiceJSON;
 import com.safetynet.applisafety.model.ChildAlert;
 import com.safetynet.applisafety.model.Fire;
 import com.safetynet.applisafety.model.FirePerson;
@@ -24,21 +26,22 @@ import com.safetynet.applisafety.model.json.FireStation;
 import com.safetynet.applisafety.model.json.JsonData;
 import com.safetynet.applisafety.model.json.MedicalRecord;
 import com.safetynet.applisafety.model.json.Person;
-import com.safetynet.applisafety.utils.ServiceJSON;
 
 @RestController
 public class Controller {
 	
 	private static final int AGE_MAJORITE = 18;
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-
+	
+	@Autowired
+	private ServiceJSON serviceJSON;
 	
 	// 1ère URL
 	@GetMapping("/firestation")
 	// GET - /firestation/1
 	// stationNumber = 1
 	public FireStationWithCountdown fireStations(@RequestParam @NonNull Integer stationNumber) throws IOException {
-		JsonData database = ServiceJSON.getJSONFile();
+		JsonData database = serviceJSON.getJSONFile();
 		
 		List<FireStation> firestations = database.getFirestations();
 		List<Person> persons = database.getPersons();
@@ -80,7 +83,7 @@ public class Controller {
 
 	@GetMapping("/childAlert")
 	public List<ChildAlert> childAlert(@RequestParam @NonNull String addressParam) throws IOException {
-		JsonData database = ServiceJSON.getJSONFile();
+		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
@@ -130,7 +133,7 @@ public class Controller {
 
 	@GetMapping("/phoneAlert")
 	public List<String> phoneAlert(@RequestParam @NonNull Integer firestationNumber) throws IOException {
-		JsonData database = ServiceJSON.getJSONFile();
+		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
@@ -151,7 +154,7 @@ public class Controller {
 
 	@GetMapping("/fire")
 	public Fire fire(@RequestParam @NonNull String address) throws IOException {
-		JsonData database = ServiceJSON.getJSONFile();
+		JsonData database = serviceJSON.getJSONFile();
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
@@ -185,7 +188,7 @@ public class Controller {
 	// 5ème URL
 	@GetMapping("/flood/stations")
 	public Map<String, List<FloodPerson>> flood(@RequestParam @NonNull Integer stations) throws IOException {
-		JsonData database = ServiceJSON.getJSONFile();
+		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
@@ -229,7 +232,7 @@ public class Controller {
 	// 6ème URL
 	@GetMapping("/personInfo")
 	public List<FirstName> personInfo(@RequestParam @NonNull String firstNameLastName) throws IOException {
-		JsonData database = ServiceJSON.getJSONFile();
+		JsonData database = serviceJSON.getJSONFile();
 		List<Person> persons = database.getPersons();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
 		List<FirstName> firstNames = new ArrayList<>();
@@ -257,7 +260,7 @@ public class Controller {
 	// 7ème URL
 	@GetMapping("/communityEmail")
 	public List<String> City(@RequestParam @NonNull String city) throws IOException {
-		JsonData database = ServiceJSON.getJSONFile();
+		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
 		List<String> emails = new ArrayList<>();
