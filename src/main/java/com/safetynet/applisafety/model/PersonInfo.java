@@ -2,7 +2,7 @@ package com.safetynet.applisafety.model;
 
 import java.util.List;
 
-public class FirstName {
+public class PersonInfo {
 	private String firstName;
 	private String lastName;
 	private String email;

@@ -20,8 +20,8 @@ import com.safetynet.applisafety.model.ChildAlert;
 import com.safetynet.applisafety.model.Fire;
 import com.safetynet.applisafety.model.FirePerson;
 import com.safetynet.applisafety.model.FireStationWithCountdown;
-import com.safetynet.applisafety.model.FirstName;
 import com.safetynet.applisafety.model.FloodPerson;
+import com.safetynet.applisafety.model.PersonInfo;
 import com.safetynet.applisafety.model.json.FireStation;
 import com.safetynet.applisafety.model.json.JsonData;
 import com.safetynet.applisafety.model.json.MedicalRecord;
@@ -29,20 +29,20 @@ import com.safetynet.applisafety.model.json.Person;
 
 @RestController
 public class Controller {
-	
+
 	private static final int AGE_MAJORITE = 18;
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-	
+
 	@Autowired
 	private ServiceJSON serviceJSON;
-	
+
 	// 1ère URL
 	@GetMapping("/firestation")
 	// GET - /firestation/1
 	// stationNumber = 1
 	public FireStationWithCountdown fireStations(@RequestParam @NonNull Integer stationNumber) throws IOException {
 		JsonData database = serviceJSON.getJSONFile();
-		
+
 		List<FireStation> firestations = database.getFirestations();
 		List<Person> persons = database.getPersons();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
@@ -186,8 +186,8 @@ public class Controller {
 	}
 
 	// 5ème URL
-	@GetMapping("/flood/stations")
-	public Map<String, List<FloodPerson>> flood(@RequestParam @NonNull Integer stations) throws IOException {
+//	@GetMapping("/flood/stations")
+	public Map<String, List<FloodPerson>> floodOld(@RequestParam @NonNull List<Integer> stations) throws IOException {
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
@@ -197,33 +197,36 @@ public class Controller {
 		Map<String, List<FloodPerson>> floods = new HashMap<>();
 
 		for (FireStation fireStation : fireStations) {
-			if (fireStation.getStation() == stations) {
-				for (Person person : persons) {
-					for (MedicalRecord medicalRecord : medicalRecords) {
-						if (fireStation.getAddress().equals(person.getAddress())
-								&& person.getFirstName().equals(medicalRecord.getFirstName())
-								&& person.getLastName().equals(medicalRecord.getLastName())) {
-							int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
-							FloodPerson floodPerson = new FloodPerson();
+			for (Integer station : stations) {
+				if (fireStation.getStation() == station) {
+					for (Person person : persons) {
+						for (MedicalRecord medicalRecord : medicalRecords) {
+							if (fireStation.getAddress().equals(person.getAddress())
+									&& person.getFirstName().equals(medicalRecord.getFirstName())
+									&& person.getLastName().equals(medicalRecord.getLastName())) {
+								int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
+								FloodPerson floodPerson = new FloodPerson();
 
-							floodPerson.setFirstName(person.getFirstName());
-							floodPerson.setLastName(person.getLastName());
-							floodPerson.setPhone(person.getPhone());
-							floodPerson.setAge(age);
-							floodPerson.setLastName(person.getLastName());
-							floodPerson.setMedications(medicalRecord.getMedications());
-							floodPerson.setAllergies(medicalRecord.getAllergies());
-							if (floods.containsKey(person.getAddress())) {
-								floods.get(person.getAddress()).add(floodPerson);
-							} else {
-								List<FloodPerson> floodsPersons = new ArrayList<>();
-								floodsPersons.add(floodPerson);
-								floods.put(person.getAddress(), floodsPersons);
+								floodPerson.setFirstName(person.getFirstName());
+								floodPerson.setLastName(person.getLastName());
+								floodPerson.setPhone(person.getPhone());
+								floodPerson.setAge(age);
+								floodPerson.setLastName(person.getLastName());
+								floodPerson.setMedications(medicalRecord.getMedications());
+								floodPerson.setAllergies(medicalRecord.getAllergies());
+								if (floods.containsKey(person.getAddress())) {
+									floods.get(person.getAddress()).add(floodPerson);
+								} else {
+									List<FloodPerson> floodsPersons = new ArrayList<>();
+									floodsPersons.add(floodPerson);
+									floods.put(person.getAddress(), floodsPersons);
+								}
+
 							}
-
 						}
 					}
 				}
+
 			}
 		}
 		return floods;
@@ -231,30 +234,35 @@ public class Controller {
 
 	// 6ème URL
 	@GetMapping("/personInfo")
-	public List<FirstName> personInfo(@RequestParam @NonNull String firstNameLastName) throws IOException {
+	public List<PersonInfo> personInfo(@RequestParam @NonNull String firstName, @RequestParam @NonNull String lastName)
+			throws IOException {
 		JsonData database = serviceJSON.getJSONFile();
 		List<Person> persons = database.getPersons();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
-		List<FirstName> firstNames = new ArrayList<>();
+		List<PersonInfo> personInfos = new ArrayList<>();
 
 		for (Person person : persons) {
-			for (MedicalRecord medicalRecord : medicalRecords) {
-				if (person.getFirstName().equals(medicalRecord.getFirstName())
-						&& person.getLastName().equals(medicalRecord.getLastName())) {
-					int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
-					FirstName firstName = new FirstName();
+			if (person.getFirstName().equals(firstName) && person.getLastName().equals(lastName)) {
+				for (MedicalRecord medicalRecord : medicalRecords) {
+					if (person.getFirstName().equals(medicalRecord.getFirstName())
+							&& person.getLastName().equals(medicalRecord.getLastName())) {
+						int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
+						PersonInfo personInfo = new PersonInfo();
 
-					firstName.setFirstName(person.getFirstName());
-					firstName.setLastName(person.getLastName());
-					firstName.setAddress(person.getAddress());
-					firstName.setAge(age);
-					firstName.setEmail(person.getEmail());
-					firstName.setMedications(medicalRecord.getMedications());
-					firstName.setAllergies(medicalRecord.getAllergies());
+						personInfo.setFirstName(person.getFirstName());
+						personInfo.setLastName(person.getLastName());
+						personInfo.setAddress(person.getAddress());
+						personInfo.setAge(age);
+						personInfo.setEmail(person.getEmail());
+						personInfo.setMedications(medicalRecord.getMedications());
+						personInfo.setAllergies(medicalRecord.getAllergies());
+
+						personInfos.add(personInfo);
+					}
 				}
 			}
 		}
-		return firstNames;
+		return personInfos;
 	}
 
 	// 7ème URL
@@ -272,9 +280,8 @@ public class Controller {
 		}
 		return emails;
 	}
-	
-	
+
 	private LocalDate getBirthdate(MedicalRecord medicalRecord) {
-		return LocalDate.parse(medicalRecord.getBirthdate(),formatter);
+		return LocalDate.parse(medicalRecord.getBirthdate(), formatter);
 	}
 }
