@@ -183,6 +183,14 @@
     "zip" : "97451",
     "phone" : "841-874-7458",
     "email" : "gramps@email.com"
+  }, {
+    "firstName" : "Fannie",
+    "lastName" : "General",
+    "address" : "1509 Culver St",
+    "city" : "Panazol",
+    "zip" : "97451",
+    "phone" : "841-874-6544",
+    "email" : "fg@email.com"
   } ],
   "firestations" : [ {
     "address" : "1509 Culver St",

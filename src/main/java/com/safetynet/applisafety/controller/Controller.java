@@ -186,8 +186,8 @@ public class Controller {
 	}
 
 	// 5ème URL
-//	@GetMapping("/flood/stations")
-	public Map<String, List<FloodPerson>> floodOld(@RequestParam @NonNull List<Integer> stations) throws IOException {
+	@GetMapping("/flood/stations")
+	public Map<String, List<FloodPerson>> flood(@RequestParam @NonNull List<Integer> stations) throws IOException {
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
@@ -267,7 +267,7 @@ public class Controller {
 
 	// 7ème URL
 	@GetMapping("/communityEmail")
-	public List<String> City(@RequestParam @NonNull String city) throws IOException {
+	public List<String> communityEmail(@RequestParam @NonNull String city) throws IOException {
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
