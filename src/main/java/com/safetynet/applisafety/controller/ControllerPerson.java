@@ -3,6 +3,8 @@ package com.safetynet.applisafety.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,27 +12,36 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.applisafety.config.ServiceJSON;
 import com.safetynet.applisafety.model.json.JsonData;
 import com.safetynet.applisafety.model.json.Person;
 
 @RestController
 public class ControllerPerson {
+	
+	private static final Logger logger = LogManager.getLogger(Controller.class);;
+	
 	@Autowired
 	private ServiceJSON serviceJSON;
 	
 	@PostMapping("/person")
 	List<Person> postMapping(@RequestBody Person personParam) throws IOException {
+		logger.info("/person, parametres : personParam=" + personParam);
 		JsonData database = serviceJSON.getJSONFile();
 		
 		database.getPersons().add(personParam);
 		serviceJSON.updateDatabase(database);
-
+		
+		logger.info("/person, retour : " + new ObjectMapper().writeValueAsString(database.getPersons()));
 		return database.getPersons();
 	}
 	
 	@PutMapping("/person")
 	List<Person> putMapping(@RequestBody Person personParam) throws IOException {
+		
+		logger.info("/person, parametres : personParam=" + personParam);
+		
 		JsonData database = serviceJSON.getJSONFile();
 		
 		List<Person> persons = database.getPersons();
@@ -46,12 +57,17 @@ public class ControllerPerson {
 		}
 		
 		serviceJSON.updateDatabase(database);
+		
+		logger.info("/person, retour : " + new ObjectMapper().writeValueAsString(database.getPersons()));
 
 		return database.getPersons();
 	}
 	
 	@DeleteMapping("/person")
 	List<Person> deleteMapping(@RequestBody Person personParam) throws IOException {
+		
+		logger.info("/person, parametres : personParam=" + personParam);
+		
 		JsonData database = serviceJSON.getJSONFile();
 		
 		List<Person> persons = database.getPersons();
@@ -63,7 +79,8 @@ public class ControllerPerson {
 		
 		
 		serviceJSON.updateDatabase(database);
-
+		
+		logger.info("/person, retour : " + new ObjectMapper().writeValueAsString(database.getPersons()));
 		return database.getPersons();
 	}
 	

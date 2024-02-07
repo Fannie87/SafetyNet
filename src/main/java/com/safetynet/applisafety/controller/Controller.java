@@ -9,12 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.applisafety.config.ServiceJSON;
 import com.safetynet.applisafety.model.ChildAlert;
 import com.safetynet.applisafety.model.Fire;
@@ -32,6 +35,7 @@ public class Controller {
 
 	private static final int AGE_MAJORITE = 18;
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+	private static final Logger logger = LogManager.getLogger(Controller.class);;
 
 	@Autowired
 	private ServiceJSON serviceJSON;
@@ -41,6 +45,8 @@ public class Controller {
 	// GET - /firestation/1
 	// stationNumber = 1
 	public FireStationWithCountdown fireStations(@RequestParam @NonNull Integer stationNumber) throws IOException {
+		logger.info("/firestation, parametres : stationNumber=" + stationNumber);
+		
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<FireStation> firestations = database.getFirestations();
@@ -78,6 +84,8 @@ public class Controller {
 		fireStationWithCountdown.setNumberAdult(numberAdult);
 		fireStationWithCountdown.setNumberMinor(numberMinor);
 		fireStationWithCountdown.setPersonsFiltered(personsFiltered);
+		
+		logger.info("/firestation, retour : " + new ObjectMapper().writeValueAsString(fireStationWithCountdown));
 		return fireStationWithCountdown;
 	}
 
@@ -133,6 +141,9 @@ public class Controller {
 
 	@GetMapping("/phoneAlert")
 	public List<String> phoneAlert(@RequestParam @NonNull Integer firestationNumber) throws IOException {
+		
+		logger.info("/phoneAlert, parametres : firestationNumber=" + firestationNumber);
+		
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
@@ -147,13 +158,16 @@ public class Controller {
 				}
 			}
 		}
-
+		logger.info("/phoneAlert, retour : " + new ObjectMapper().writeValueAsString(phones));
 		return phones;
 
 	}
 
 	@GetMapping("/fire")
 	public Fire fire(@RequestParam @NonNull String address) throws IOException {
+		
+		logger.info("/fire, parametres : address=" + address);
+		
 		JsonData database = serviceJSON.getJSONFile();
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
@@ -182,12 +196,16 @@ public class Controller {
 				}
 			}
 		}
+		logger.info("/fire, retour : " + new ObjectMapper().writeValueAsString(fire));
 		return fire;
 	}
 
 	// 5ème URL
 	@GetMapping("/flood/stations")
 	public Map<String, List<FloodPerson>> flood(@RequestParam @NonNull List<Integer> stations) throws IOException {
+		
+		logger.info("/flood/stations, parametres : stations=" + stations);
+		
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
@@ -229,6 +247,8 @@ public class Controller {
 
 			}
 		}
+		
+		logger.info("/flood/stations, retour : " + new ObjectMapper().writeValueAsString(floods));
 		return floods;
 	}
 
@@ -236,6 +256,9 @@ public class Controller {
 	@GetMapping("/personInfo")
 	public List<PersonInfo> personInfo(@RequestParam @NonNull String firstName, @RequestParam @NonNull String lastName)
 			throws IOException {
+		
+		logger.info("/personInfo, parametres : firstName=" + firstName);
+		
 		JsonData database = serviceJSON.getJSONFile();
 		List<Person> persons = database.getPersons();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
@@ -262,12 +285,16 @@ public class Controller {
 				}
 			}
 		}
+		logger.info("/personInfo, retour : " + new ObjectMapper().writeValueAsString(personInfos));
 		return personInfos;
 	}
 
 	// 7ème URL
 	@GetMapping("/communityEmail")
 	public List<String> communityEmail(@RequestParam @NonNull String city) throws IOException {
+		
+		logger.info("/communityEmail, parametres : city=" + city);
+		
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
@@ -278,6 +305,7 @@ public class Controller {
 				emails.add(person.getEmail());
 			}
 		}
+		logger.info("/communityEmail, retour : " + new ObjectMapper().writeValueAsString(emails));
 		return emails;
 	}
 

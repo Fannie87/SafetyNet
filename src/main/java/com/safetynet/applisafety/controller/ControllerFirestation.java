@@ -3,6 +3,8 @@ package com.safetynet.applisafety.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,12 +12,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.applisafety.config.ServiceJSON;
 import com.safetynet.applisafety.model.json.FireStation;
 import com.safetynet.applisafety.model.json.JsonData;
 
 @RestController
 public class ControllerFirestation {
+	
+	private static final Logger logger = LogManager.getLogger(Controller.class);;
 	
 	@Autowired
 	private ServiceJSON serviceJSON;
@@ -32,6 +37,9 @@ public class ControllerFirestation {
 
 	@PutMapping("/firestation")
 	List<FireStation> putMapping(@RequestBody FireStation firestationParam) throws IOException {
+		
+		logger.info("/firestation, parametres : firestationParam=" + firestationParam);
+		
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<FireStation> fireStations = database.getFirestations();
@@ -44,11 +52,15 @@ public class ControllerFirestation {
 
 		serviceJSON.updateDatabase(database);
 
+		logger.info("/firestation, retour : " + new ObjectMapper().writeValueAsString(database.getFirestations()));
 		return database.getFirestations();
 	}
 
 	@DeleteMapping("/firestation")
 	List<FireStation> deleteMapping(@RequestBody FireStation firestationParam) throws IOException {
+		
+		logger.info("/firestation, parametres : firestationParam=" + firestationParam);
+		
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<FireStation> fireStations = database.getFirestations();
@@ -60,6 +72,7 @@ public class ControllerFirestation {
 
 		serviceJSON.updateDatabase(database);
 
+		logger.info("/firestation, retour : " + new ObjectMapper().writeValueAsString(database.getFirestations()));
 		return database.getFirestations();
 	}
 
