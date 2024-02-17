@@ -48,7 +48,7 @@ public class ControllerFirestationTest {
 		firestationParam.setAddress("748 Calmette couvin Dr");
 		firestationParam.setStation(99);
 
-		List<FireStation> listFirestation = controllerFirestation.postMapping(firestationParam);
+		List<FireStation> listFirestation = controllerFirestation.addFirestation(firestationParam);
 		
 		assertThat(listFirestation).contains(firestationParam);
 			
@@ -64,7 +64,7 @@ public class ControllerFirestationTest {
 		firestationParam.setAddress("748 Calmette couvin Dr");
 		firestationParam.setStation(100);
 
-		List<FireStation> listFirestation = controllerFirestation.putMapping(firestationParam);
+		List<FireStation> listFirestation = controllerFirestation.updateFirestation(firestationParam);
 		
 		for (FireStation fireStation : listFirestation) {
 			if (fireStation.getAddress().equals(firestationParam.getAddress())){
@@ -85,7 +85,7 @@ public class ControllerFirestationTest {
 		firestationParam.setAddress("748 Calmette couvin Dr");
 		firestationParam.setStation(99);
 
-		List<FireStation> listFirestation = controllerFirestation.deleteMapping(firestationParam);
+		List<FireStation> listFirestation = controllerFirestation.deleteFirestation(firestationParam);
 		
 		assertThat(listFirestation).doesNotContain(firestationParam);
 			

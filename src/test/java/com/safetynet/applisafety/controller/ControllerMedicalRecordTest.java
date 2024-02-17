@@ -48,7 +48,7 @@ public class ControllerMedicalRecordTest {
 		medicalRecordParam.setLastName("Boyd");
 		medicalRecordParam.setBirthdate("03/06/1984");
 
-		List<MedicalRecord> listMedicalRecords = controllerMedicalRecord.postMapping(medicalRecordParam);
+		List<MedicalRecord> listMedicalRecords = controllerMedicalRecord.addMedicalRecord(medicalRecordParam);
 
 		assertThat(listMedicalRecords).contains(medicalRecordParam);
 
@@ -64,7 +64,7 @@ public class ControllerMedicalRecordTest {
 		medicalRecordParam.setLastName("Boyd");
 		medicalRecordParam.setBirthdate("03/06/1984");
 
-		List<MedicalRecord> listMedicalRecord = controllerMedicalRecord.putMapping(medicalRecordParam);
+		List<MedicalRecord> listMedicalRecord = controllerMedicalRecord.updateMedicalRecord(medicalRecordParam);
 
 		for (MedicalRecord medicalRecord : listMedicalRecord) {
 			if (medicalRecord.getFirstName().equals(medicalRecordParam.getFirstName())
@@ -87,7 +87,7 @@ public class ControllerMedicalRecordTest {
 		medicalRecordParam.setLastName("Boyd");
 		medicalRecordParam.setBirthdate("03/06/1984");
 
-		List<MedicalRecord> listMedicalRecord = controllerMedicalRecord.deleteMapping(medicalRecordParam);
+		List<MedicalRecord> listMedicalRecord = controllerMedicalRecord.deleteMedicalRecord(medicalRecordParam);
 	
 
 				assertThat(listMedicalRecord).doesNotContain(medicalRecordParam);			

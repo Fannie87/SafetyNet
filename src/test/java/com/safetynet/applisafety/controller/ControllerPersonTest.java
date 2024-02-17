@@ -52,7 +52,7 @@ public class ControllerPersonTest {
 		personParam.setPhone("841-874-6544");
 		personParam.setEmail("fg@email.com");
 		
-		List<Person> listPerson = controllerPerson.postMapping(personParam);
+		List<Person> listPerson = controllerPerson.addPerson(personParam);
 		
 		assertThat(listPerson).contains(personParam);
 		
@@ -72,7 +72,7 @@ public class ControllerPersonTest {
 		personParam.setPhone("841-874-6544");
 		personParam.setEmail("fg@email.com");
 		
-		List<Person> listPerson = controllerPerson.putMapping(personParam);
+		List<Person> listPerson = controllerPerson.updatePerson(personParam);
 		
 		for (Person person : listPerson) {
 			if (person.getFirstName().equals(personParam.getFirstName())&&
@@ -96,7 +96,7 @@ public class ControllerPersonTest {
 		personParam.setFirstName("John");
 		personParam.setLastName("Boyd");
 		
-		List<Person> listPerson = controllerPerson.deleteMapping(personParam);
+		List<Person> listPerson = controllerPerson.deletePerson(personParam);
 		
 		assertThat(listPerson).doesNotContain(personParam);
 		

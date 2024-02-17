@@ -26,7 +26,7 @@ public class ControllerPerson {
 	private ServiceJSON serviceJSON;
 	
 	@PostMapping("/person")
-	List<Person> postMapping(@RequestBody Person personParam) throws IOException {
+	List<Person> addPerson(@RequestBody Person personParam) throws IOException {
 		logger.info("/person, parametres : personParam=" + personParam);
 		JsonData database = serviceJSON.getJSONFile();
 		
@@ -38,7 +38,7 @@ public class ControllerPerson {
 	}
 	
 	@PutMapping("/person")
-	List<Person> putMapping(@RequestBody Person personParam) throws IOException {
+	List<Person> updatePerson(@RequestBody Person personParam) throws IOException {
 		
 		logger.info("/person, parametres : personParam=" + personParam);
 		
@@ -64,7 +64,7 @@ public class ControllerPerson {
 	}
 	
 	@DeleteMapping("/person")
-	List<Person> deleteMapping(@RequestBody Person personParam) throws IOException {
+	List<Person> deletePerson(@RequestBody Person personParam) throws IOException {
 		
 		logger.info("/person, parametres : personParam=" + personParam);
 		
@@ -72,7 +72,7 @@ public class ControllerPerson {
 		
 		List<Person> persons = database.getPersons();
 		
-//		Fonction Lambda: simplifie l'écrture et pas besoin de faire plusieurs boucles pour récupérer l'index (firstname)
+//		Fonction Lambda: simplifie l'écriture et pas besoin de faire plusieurs boucles pour récupérer l'index (firstname)
 //		entrée -> retour de la fonction()
 		persons.removeIf(person -> person.getFirstName().equals(personParam.getFirstName())&&
 				person.getLastName().equals(personParam.getLastName()));

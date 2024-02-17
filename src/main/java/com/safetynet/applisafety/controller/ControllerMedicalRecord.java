@@ -27,7 +27,7 @@ public class ControllerMedicalRecord {
 	private ServiceJSON serviceJSON;
 	
 	@PostMapping("/medicalRecord")
-	List<MedicalRecord> postMapping(@RequestBody MedicalRecord medicalRecordParam) throws IOException {
+	List<MedicalRecord> addMedicalRecord(@RequestBody MedicalRecord medicalRecordParam) throws IOException {
 		
 		logger.info("/medicalRecord, parametres : medicalRecordParam=" + medicalRecordParam);
 		
@@ -41,7 +41,7 @@ public class ControllerMedicalRecord {
 	}
 
 	@PutMapping("/medicalRecord")
-	List<MedicalRecord> putMapping(@RequestBody MedicalRecord medicalRecordParam) throws IOException {
+	List<MedicalRecord> updateMedicalRecord(@RequestBody MedicalRecord medicalRecordParam) throws IOException {
 		
 		logger.info("/medicalRecord, parametres : medicalRecordParam=" + medicalRecordParam);
 		
@@ -65,7 +65,7 @@ public class ControllerMedicalRecord {
 	}
 
 	@DeleteMapping("/medicalRecord")
-	List<MedicalRecord> deleteMapping(@RequestBody MedicalRecord medicalRecordParam) throws IOException {
+	List<MedicalRecord> deleteMedicalRecord(@RequestBody MedicalRecord medicalRecordParam) throws IOException {
 		
 		logger.info("/medicalRecord, parametres : medicalRecordParam=" + medicalRecordParam);
 		

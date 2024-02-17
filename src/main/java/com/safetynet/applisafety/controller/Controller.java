@@ -42,11 +42,10 @@ public class Controller {
 
 	// 1ère URL
 	@GetMapping("/firestation")
-	// GET - /firestation/1
-	// stationNumber = 1
+		// stationNumber = 1
 	public FireStationWithCountdown fireStations(@RequestParam @NonNull Integer stationNumber) throws IOException {
 		logger.info("/firestation, parametres : stationNumber=" + stationNumber);
-		
+
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<FireStation> firestations = database.getFirestations();
@@ -80,6 +79,10 @@ public class Controller {
 				}
 			}
 		}
+		
+		if(personsFiltered.isEmpty())
+			logger.error("La liste des personnes est vide");
+		
 		FireStationWithCountdown fireStationWithCountdown = new FireStationWithCountdown();
 		fireStationWithCountdown.setNumberAdult(numberAdult);
 		fireStationWithCountdown.setNumberMinor(numberMinor);
@@ -91,6 +94,9 @@ public class Controller {
 
 	@GetMapping("/childAlert")
 	public List<ChildAlert> childAlert(@RequestParam @NonNull String addressParam) throws IOException {
+		
+		logger.info("/childAlert, parametres : addressParam=" + addressParam);
+		
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
@@ -117,7 +123,7 @@ public class Controller {
 				}
 			}
 		}
-		if (childAlerts != null) {
+		if (!childAlerts.isEmpty()) {
 			for (Person person : persons) {
 				if (person.getAddress().equals(addressParam)) {
 					for (MedicalRecord medicalRecord : medicalRecords) {
@@ -135,7 +141,11 @@ public class Controller {
 				}
 			}
 		}
+		
+		if(childAlerts.isEmpty())
+			logger.error("La liste des enfants est vide");
 
+		logger.info("/childAlert, retour : " + new ObjectMapper().writeValueAsString(childAlerts));
 		return childAlerts;
 	}
 
@@ -158,6 +168,10 @@ public class Controller {
 				}
 			}
 		}
+		
+		if(phones.isEmpty())
+			logger.error("La liste des numéros de téléphone est vide");
+		
 		logger.info("/phoneAlert, retour : " + new ObjectMapper().writeValueAsString(phones));
 		return phones;
 
@@ -196,6 +210,10 @@ public class Controller {
 				}
 			}
 		}
+		
+		if(fire.getFirePersons().isEmpty())
+			logger.error("La liste des personnes est vide");
+		
 		logger.info("/fire, retour : " + new ObjectMapper().writeValueAsString(fire));
 		return fire;
 	}
@@ -248,6 +266,9 @@ public class Controller {
 			}
 		}
 		
+		if(floods.isEmpty())
+			logger.error("La liste des personnes est vide");
+		
 		logger.info("/flood/stations, retour : " + new ObjectMapper().writeValueAsString(floods));
 		return floods;
 	}
@@ -285,6 +306,10 @@ public class Controller {
 				}
 			}
 		}
+		
+		if(personInfos.isEmpty())
+			logger.error("La liste des personnes est vide");
+		
 		logger.info("/personInfo, retour : " + new ObjectMapper().writeValueAsString(personInfos));
 		return personInfos;
 	}
@@ -305,6 +330,10 @@ public class Controller {
 				emails.add(person.getEmail());
 			}
 		}
+		
+		if(emails.isEmpty())
+			logger.error("La liste des mails est vide");
+		
 		logger.info("/communityEmail, retour : " + new ObjectMapper().writeValueAsString(emails));
 		return emails;
 	}

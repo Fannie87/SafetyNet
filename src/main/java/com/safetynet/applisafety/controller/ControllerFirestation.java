@@ -26,17 +26,22 @@ public class ControllerFirestation {
 	private ServiceJSON serviceJSON;
 	
 	@PostMapping("/firestation")
-	List<FireStation> postMapping(@RequestBody FireStation firestationParam) throws IOException {
+	List<FireStation> addFirestation(@RequestBody FireStation firestationParam) throws IOException {
+		
+		logger.info("/firestation, parametres : firestationParam=" + firestationParam);
+		
 		JsonData database = serviceJSON.getJSONFile();
 
 		database.getFirestations().add(firestationParam);
 		serviceJSON.updateDatabase(database);
+		
+		logger.info("/firestation, retour : " + new ObjectMapper().writeValueAsString(database.getFirestations()));
 
 		return database.getFirestations();
 	}
 
 	@PutMapping("/firestation")
-	List<FireStation> putMapping(@RequestBody FireStation firestationParam) throws IOException {
+	List<FireStation> updateFirestation(@RequestBody FireStation firestationParam) throws IOException {
 		
 		logger.info("/firestation, parametres : firestationParam=" + firestationParam);
 		
@@ -57,7 +62,7 @@ public class ControllerFirestation {
 	}
 
 	@DeleteMapping("/firestation")
-	List<FireStation> deleteMapping(@RequestBody FireStation firestationParam) throws IOException {
+	List<FireStation> deleteFirestation(@RequestBody FireStation firestationParam) throws IOException {
 		
 		logger.info("/firestation, parametres : firestationParam=" + firestationParam);
 		
