@@ -42,7 +42,7 @@ public class Controller {
 
 	// 1ère URL
 	@GetMapping("/firestation")
-		// stationNumber = 1
+	// stationNumber = 1
 	public FireStationWithCountdown fireStations(@RequestParam @NonNull Integer stationNumber) throws IOException {
 		logger.info("/firestation, parametres : stationNumber=" + stationNumber);
 
@@ -54,24 +54,25 @@ public class Controller {
 
 		List<Person> personsFiltered = new ArrayList<>();
 
-		for (FireStation fireStation : firestations) {
+		String adressFireStationFound = null;
+		for (FireStation fireStation : firestations)
 			if (stationNumber == fireStation.getStation()) {
-				for (Person person : persons) {
-					if (person.getAddress().equals(fireStation.getAddress())) {
-						personsFiltered.add(person);
-					}
-				}
+				adressFireStationFound = fireStation.getAddress();
+				break;
 			}
-		}
 
-		LocalDate today = LocalDate.now().minusYears(AGE_MAJORITE);
+		for (Person person : persons)
+			if (person.getAddress().equals(adressFireStationFound))
+				personsFiltered.add(person);
+
+		LocalDate minDateToBeMajor = LocalDate.now().minusYears(AGE_MAJORITE);
 		int numberMinor = 0;
 		int numberAdult = 0;
 		for (Person person : personsFiltered) {
 			for (MedicalRecord medicalRecord : medicalRecords) {
 				if (person.getFirstName().equals(medicalRecord.getFirstName())
 						&& person.getLastName().equals(medicalRecord.getLastName())) {
-					if (getBirthdate(medicalRecord).isAfter(today)) {// mineur
+					if (getBirthdate(medicalRecord).isAfter(minDateToBeMajor)) {// mineur
 						numberMinor++;
 					} else {
 						numberAdult++;
@@ -79,24 +80,24 @@ public class Controller {
 				}
 			}
 		}
-		
-		if(personsFiltered.isEmpty())
+
+		if (personsFiltered.isEmpty())
 			logger.error("La liste des personnes est vide");
-		
+
 		FireStationWithCountdown fireStationWithCountdown = new FireStationWithCountdown();
 		fireStationWithCountdown.setNumberAdult(numberAdult);
 		fireStationWithCountdown.setNumberMinor(numberMinor);
 		fireStationWithCountdown.setPersonsFiltered(personsFiltered);
-		
+
 		logger.info("/firestation, retour : " + new ObjectMapper().writeValueAsString(fireStationWithCountdown));
 		return fireStationWithCountdown;
 	}
 
 	@GetMapping("/childAlert")
 	public List<ChildAlert> childAlert(@RequestParam @NonNull String addressParam) throws IOException {
-		
+
 		logger.info("/childAlert, parametres : addressParam=" + addressParam);
-		
+
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
@@ -141,8 +142,8 @@ public class Controller {
 				}
 			}
 		}
-		
-		if(childAlerts.isEmpty())
+
+		if (childAlerts.isEmpty())
 			logger.error("La liste des enfants est vide");
 
 		logger.info("/childAlert, retour : " + new ObjectMapper().writeValueAsString(childAlerts));
@@ -151,9 +152,9 @@ public class Controller {
 
 	@GetMapping("/phoneAlert")
 	public List<String> phoneAlert(@RequestParam @NonNull Integer firestationNumber) throws IOException {
-		
+
 		logger.info("/phoneAlert, parametres : firestationNumber=" + firestationNumber);
-		
+
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
@@ -168,10 +169,10 @@ public class Controller {
 				}
 			}
 		}
-		
-		if(phones.isEmpty())
+
+		if (phones.isEmpty())
 			logger.error("La liste des numéros de téléphone est vide");
-		
+
 		logger.info("/phoneAlert, retour : " + new ObjectMapper().writeValueAsString(phones));
 		return phones;
 
@@ -179,9 +180,9 @@ public class Controller {
 
 	@GetMapping("/fire")
 	public Fire fire(@RequestParam @NonNull String address) throws IOException {
-		
+
 		logger.info("/fire, parametres : address=" + address);
-		
+
 		JsonData database = serviceJSON.getJSONFile();
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
@@ -189,31 +190,43 @@ public class Controller {
 		Fire fire = new Fire();
 		fire.setFirePersons(new ArrayList<>());
 
-		for (Person person : persons) {
-			for (FireStation fireStation : fireStations) {
-				for (MedicalRecord medicalRecord : medicalRecords) {
-					if (person.getAddress().equals(fireStation.getAddress()) && fireStation.getAddress().equals(address)
-							&& person.getFirstName().equals(medicalRecord.getFirstName())
-							&& person.getLastName().equals(medicalRecord.getLastName())) {
-						int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
-						FirePerson firePerson = new FirePerson();
+		FireStation fireStationFound = new FireStation();
+		for (FireStation fireStation : fireStations) {
+			if (fireStation.getAddress().equals(address)) {
+				fireStationFound = fireStation;
+				fire.setStation(fireStationFound.getStation());
+				break;// fait sortir de la boucle for each après avoir trouvé la station souhaitée
+			}
+		}
 
-						firePerson.setFirstName(person.getFirstName());
-						firePerson.setLastName(person.getLastName());
-						firePerson.setPhone(person.getPhone());
-						firePerson.setAge(age);
-						firePerson.setMedications(medicalRecord.getMedications());
-						firePerson.setAllergies(medicalRecord.getAllergies());
-						fire.setStation(fireStation.getStation());
-						fire.getFirePersons().add(firePerson);
-					}
-				}
+		Map<String, FirePerson> mapPersonFound = new HashMap<String, FirePerson>();// Permet d'éviter une imbrication de 3 boucles for each
+		for (Person person : persons) {
+			if (person.getAddress().equals(address)) {
+				FirePerson firePerson = new FirePerson();
+				firePerson.setFirstName(person.getFirstName());
+				firePerson.setLastName(person.getLastName());
+				firePerson.setPhone(person.getPhone());
+
+				mapPersonFound.put(person.getFirstName() + person.getLastName(), firePerson);
+			}
+		}
+
+		for (MedicalRecord medicalRecord : medicalRecords) {
+			String keyPerson = medicalRecord.getFirstName() + medicalRecord.getLastName();
+			if (mapPersonFound.containsKey(keyPerson)) {
+				FirePerson firePerson = mapPersonFound.get(keyPerson);
+				int age = Period.between(getBirthdate(medicalRecord), LocalDate.now()).getYears();
+				firePerson.setAge(age);
+				firePerson.setMedications(medicalRecord.getMedications());
+				firePerson.setAllergies(medicalRecord.getAllergies());
 			}
 		}
 		
-		if(fire.getFirePersons().isEmpty())
+		fire.setFirePersons(new ArrayList<>(mapPersonFound.values()));//Demande de renvoyer une liste et non une map= modification
+
+		if (fire.getFirePersons().isEmpty())
 			logger.error("La liste des personnes est vide");
-		
+
 		logger.info("/fire, retour : " + new ObjectMapper().writeValueAsString(fire));
 		return fire;
 	}
@@ -221,9 +234,9 @@ public class Controller {
 	// 5ème URL
 	@GetMapping("/flood/stations")
 	public Map<String, List<FloodPerson>> flood(@RequestParam @NonNull List<Integer> stations) throws IOException {
-		
+
 		logger.info("/flood/stations, parametres : stations=" + stations);
-		
+
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
@@ -253,8 +266,7 @@ public class Controller {
 								if (floods.containsKey(person.getAddress())) {
 									floods.get(person.getAddress()).add(floodPerson);
 								} else {
-									List<FloodPerson> floodsPersons = new ArrayList<>();
-									floodsPersons.add(floodPerson);
+									List<FloodPerson> floodsPersons = List.of(floodPerson);
 									floods.put(person.getAddress(), floodsPersons);
 								}
 
@@ -265,10 +277,10 @@ public class Controller {
 
 			}
 		}
-		
-		if(floods.isEmpty())
+
+		if (floods.isEmpty())
 			logger.error("La liste des personnes est vide");
-		
+
 		logger.info("/flood/stations, retour : " + new ObjectMapper().writeValueAsString(floods));
 		return floods;
 	}
@@ -277,9 +289,9 @@ public class Controller {
 	@GetMapping("/personInfo")
 	public List<PersonInfo> personInfo(@RequestParam @NonNull String firstName, @RequestParam @NonNull String lastName)
 			throws IOException {
-		
+
 		logger.info("/personInfo, parametres : firstName=" + firstName);
-		
+
 		JsonData database = serviceJSON.getJSONFile();
 		List<Person> persons = database.getPersons();
 		List<MedicalRecord> medicalRecords = database.getMedicalrecords();
@@ -306,10 +318,10 @@ public class Controller {
 				}
 			}
 		}
-		
-		if(personInfos.isEmpty())
+
+		if (personInfos.isEmpty())
 			logger.error("La liste des personnes est vide");
-		
+
 		logger.info("/personInfo, retour : " + new ObjectMapper().writeValueAsString(personInfos));
 		return personInfos;
 	}
@@ -317,9 +329,9 @@ public class Controller {
 	// 7ème URL
 	@GetMapping("/communityEmail")
 	public List<String> communityEmail(@RequestParam @NonNull String city) throws IOException {
-		
+
 		logger.info("/communityEmail, parametres : city=" + city);
-		
+
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<Person> persons = database.getPersons();
@@ -330,10 +342,10 @@ public class Controller {
 				emails.add(person.getEmail());
 			}
 		}
-		
-		if(emails.isEmpty())
+
+		if (emails.isEmpty())
 			logger.error("La liste des mails est vide");
-		
+
 		logger.info("/communityEmail, retour : " + new ObjectMapper().writeValueAsString(emails));
 		return emails;
 	}

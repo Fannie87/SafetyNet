@@ -51,6 +51,7 @@ public class ControllerFirestation {
 		for (FireStation fireStation : fireStations) {
 			if (fireStation.getAddress().equals(firestationParam.getAddress())) {
 				fireStation.setStation(firestationParam.getStation());
+				break;
 			}
 
 		}
