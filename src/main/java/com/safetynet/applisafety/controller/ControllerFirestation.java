@@ -48,12 +48,12 @@ public class ControllerFirestation {
 		JsonData database = serviceJSON.getJSONFile();
 
 		List<FireStation> fireStations = database.getFirestations();
+		
 		for (FireStation fireStation : fireStations) {
 			if (fireStation.getAddress().equals(firestationParam.getAddress())) {
 				fireStation.setStation(firestationParam.getStation());
 				break;
 			}
-
 		}
 
 		serviceJSON.updateDatabase(database);

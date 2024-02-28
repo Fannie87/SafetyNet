@@ -124,7 +124,7 @@ public class Controller {
 				}
 			}
 		}
-		if (!childAlerts.isEmpty()) {
+		if (!childAlerts.isEmpty()) {//Si il y a des enfants, ils s'enregistrent dans la liste
 			for (Person person : persons) {
 				if (person.getAddress().equals(addressParam)) {
 					for (MedicalRecord medicalRecord : medicalRecords) {
@@ -160,15 +160,16 @@ public class Controller {
 		List<Person> persons = database.getPersons();
 		List<FireStation> fireStations = database.getFirestations();
 		List<String> phones = new ArrayList<>();
+		List<String> listAddress = new ArrayList<String>();
 
-		for (FireStation fireStation : fireStations) {
-			for (Person person : persons) {
-				if (fireStation.getAddress().equals(person.getAddress())
-						&& fireStation.getStation() == firestationNumber) {
+		for (FireStation fireStation : fireStations)
+			if (fireStation.getStation() == firestationNumber)
+				listAddress.add(fireStation.getAddress());
+
+		for (String address : listAddress) 
+			for (Person person : persons) 
+				if (address.equals(person.getAddress())) 
 					phones.add(person.getPhone());
-				}
-			}
-		}
 
 		if (phones.isEmpty())
 			logger.error("La liste des numéros de téléphone est vide");
@@ -199,7 +200,8 @@ public class Controller {
 			}
 		}
 
-		Map<String, FirePerson> mapPersonFound = new HashMap<String, FirePerson>();// Permet d'éviter une imbrication de 3 boucles for each
+		Map<String, FirePerson> mapPersonFound = new HashMap<String, FirePerson>();// Permet d'éviter une imbrication de
+																					// 3 boucles for each
 		for (Person person : persons) {
 			if (person.getAddress().equals(address)) {
 				FirePerson firePerson = new FirePerson();
@@ -221,8 +223,9 @@ public class Controller {
 				firePerson.setAllergies(medicalRecord.getAllergies());
 			}
 		}
-		
-		fire.setFirePersons(new ArrayList<>(mapPersonFound.values()));//Demande de renvoyer une liste et non une map= modification
+
+		fire.setFirePersons(new ArrayList<>(mapPersonFound.values()));// Demande de renvoyer une liste et non une map=
+																		// modification
 
 		if (fire.getFirePersons().isEmpty())
 			logger.error("La liste des personnes est vide");
