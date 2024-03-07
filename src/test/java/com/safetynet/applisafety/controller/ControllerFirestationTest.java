@@ -17,17 +17,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.applisafety.config.ServiceJSON;
+import com.safetynet.applisafety.controller.repository.Repository;
 import com.safetynet.applisafety.model.json.FireStation;
 import com.safetynet.applisafety.model.json.JsonData;
 
 @ExtendWith(MockitoExtension.class)
 public class ControllerFirestationTest {
 	@InjectMocks
-	private ControllerFirestation controllerFirestation;
+	private ControllerFireStation controllerFirestation;
 
 	@Mock
-	private ServiceJSON serviceJSON;
+	private Repository serviceJSON;
 
 	static JsonData jsonData;
 
@@ -40,7 +40,7 @@ public class ControllerFirestationTest {
 	
 	@Test
 	void postMapping() throws Exception {
-		when(serviceJSON.getJSONFile()).thenReturn(jsonData);
+		when(serviceJSON.loadJSONData()).thenReturn(jsonData);
 
 				
 		FireStation firestationParam = new FireStation();
@@ -56,7 +56,7 @@ public class ControllerFirestationTest {
 	
 	@Test
 	void putMapping() throws Exception {
-		when(serviceJSON.getJSONFile()).thenReturn(jsonData);
+		when(serviceJSON.loadJSONData()).thenReturn(jsonData);
 
 				
 		FireStation firestationParam = new FireStation();
@@ -77,7 +77,7 @@ public class ControllerFirestationTest {
 	
 	@Test
 	void deleteMapping() throws Exception {
-		when(serviceJSON.getJSONFile()).thenReturn(jsonData);
+		when(serviceJSON.loadJSONData()).thenReturn(jsonData);
 
 				
 		FireStation firestationParam = new FireStation();

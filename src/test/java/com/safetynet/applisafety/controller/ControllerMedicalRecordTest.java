@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.applisafety.config.ServiceJSON;
+import com.safetynet.applisafety.controller.repository.Repository;
 import com.safetynet.applisafety.model.json.JsonData;
 import com.safetynet.applisafety.model.json.MedicalRecord;
 
@@ -27,7 +27,7 @@ public class ControllerMedicalRecordTest {
 	private ControllerMedicalRecord controllerMedicalRecord;
 
 	@Mock
-	private ServiceJSON serviceJSON;
+	private Repository serviceJSON;
 
 	static JsonData jsonData;
 
@@ -40,7 +40,7 @@ public class ControllerMedicalRecordTest {
 
 	@Test
 	void postMapping() throws Exception {
-		when(serviceJSON.getJSONFile()).thenReturn(jsonData);
+		when(serviceJSON.loadJSONData()).thenReturn(jsonData);
 
 		MedicalRecord medicalRecordParam = new MedicalRecord();
 
@@ -56,7 +56,7 @@ public class ControllerMedicalRecordTest {
 
 	@Test
 	void putMapping() throws Exception {
-		when(serviceJSON.getJSONFile()).thenReturn(jsonData);
+		when(serviceJSON.loadJSONData()).thenReturn(jsonData);
 
 		MedicalRecord medicalRecordParam = new MedicalRecord();
 
@@ -79,7 +79,7 @@ public class ControllerMedicalRecordTest {
 
 	@Test
 	void deleteMapping() throws Exception {
-		when(serviceJSON.getJSONFile()).thenReturn(jsonData);
+		when(serviceJSON.loadJSONData()).thenReturn(jsonData);
 
 		MedicalRecord medicalRecordParam = new MedicalRecord();
 

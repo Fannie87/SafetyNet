@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.applisafety.config.ServiceJSON;
+import com.safetynet.applisafety.controller.repository.Repository;
 import com.safetynet.applisafety.model.json.JsonData;
 import com.safetynet.applisafety.model.json.Person;
 
@@ -27,7 +27,7 @@ public class ControllerPersonTest {
 	private ControllerPerson controllerPerson;
 
 	@Mock
-	private ServiceJSON serviceJSON;
+	private Repository serviceJSON;
 
 	static JsonData jsonData;
 
@@ -40,7 +40,7 @@ public class ControllerPersonTest {
 	
 	@Test
 	void postMapping() throws Exception {
-		when(serviceJSON.getJSONFile()).thenReturn(jsonData);
+		when(serviceJSON.loadJSONData()).thenReturn(jsonData);
 
 		Person personParam = new Person();
 		
@@ -60,7 +60,7 @@ public class ControllerPersonTest {
 	
 	@Test
 	void putMapping() throws Exception {
-		when(serviceJSON.getJSONFile()).thenReturn(jsonData);
+		when(serviceJSON.loadJSONData()).thenReturn(jsonData);
 
 		Person personParam = new Person();
 		
@@ -89,7 +89,7 @@ public class ControllerPersonTest {
 	
 	@Test
 	void deleteMapping() throws Exception {
-		when(serviceJSON.getJSONFile()).thenReturn(jsonData);
+		when(serviceJSON.loadJSONData()).thenReturn(jsonData);
 
 		Person personParam = new Person();
 		
