@@ -30,7 +30,7 @@ public class FireStationRepository {
 //		Fonction Lambda: simplifie l'écrture et pas besoin de faire plusieurs boucles pour récupérer l'index (firstname)
 //		entrée -> retour de la fonction()
 		fireStations.removeIf(firestation -> firestation.getAddress().equals(fireStation.getAddress())
-				|| firestation.getStation() == fireStation.getStation());
+				&& firestation.getStation() == fireStation.getStation());
 		return fireStations;
 	}
 	

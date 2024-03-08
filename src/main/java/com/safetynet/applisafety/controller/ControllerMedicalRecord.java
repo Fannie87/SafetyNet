@@ -34,5 +34,6 @@ public class ControllerMedicalRecord {
 	List<MedicalRecord> deleteMedicalRecord(@RequestBody MedicalRecord medicalRecordParam) throws IOException {
 		return serviceControllerMedicalRecord.deleteMedicalRecord(medicalRecordParam);
 	}
+	
 
 }

@@ -23,16 +23,13 @@ import com.safetynet.applisafety.controller.repository.FireStationRepository;
 import com.safetynet.applisafety.controller.repository.MedicalRecordRepository;
 import com.safetynet.applisafety.controller.repository.PersonRepository;
 import com.safetynet.applisafety.model.ChildAlert;
-import com.safetynet.applisafety.model.Fire;
-import com.safetynet.applisafety.model.FireStationWithCountdown;
 import com.safetynet.applisafety.model.FloodPerson;
 import com.safetynet.applisafety.model.PersonInfo;
 import com.safetynet.applisafety.model.json.JsonData;
-
 @ExtendWith(MockitoExtension.class)
-public class ServiceControllerTest {
+public class ServiceControllerPersonTest {
 	@InjectMocks
-	private ServiceController serviceController;
+	private ServiceControllerPerson serviceControllerPerson;
 
 	@Mock
 	private PersonRepository personRepository;
@@ -51,56 +48,20 @@ public class ServiceControllerTest {
 
 	}
 
-	@Test
-	void fireStations() throws IOException {
-		when(personRepository.getPersons()).thenReturn(jsonData.getPersons());
-		when(fireStationRepository.getFireStations()).thenReturn(jsonData.getFirestations());
-		when(medicalRecordRepository.getMedicalRecords()).thenReturn(jsonData.getMedicalrecords());
-
-		FireStationWithCountdown fireStationWithCountdowns = serviceController.fireStations(1);
-
-		assertThat(fireStationWithCountdowns.getNumberMinor()).isEqualTo(1);
-		assertThat(fireStationWithCountdowns.getNumberAdult()).isEqualTo(5);
-	}
-
+	// 2ème URL
 	@Test
 	void childAlert() throws IOException {
 		when(personRepository.getPersons()).thenReturn(jsonData.getPersons());
 		when(medicalRecordRepository.getMedicalRecords()).thenReturn(jsonData.getMedicalrecords());
 		
-		List<ChildAlert> childAlerts = serviceController.childAlert("1509 Culver St");
+		List<ChildAlert> childAlerts = serviceControllerPerson.childAlert("1509 Culver St");
 
 		assertThat(childAlerts.get(0).getFirstName()).isEqualTo("Tenley");
 		assertThat(childAlerts.get(0).getLastName()).isEqualTo("Boyd");
 		assertThat(childAlerts.get(0).getAge()).isEqualTo(12);
 	}
 
-	@Test
-	void phoneAlert() throws IOException {
-		when(personRepository.getPersons()).thenReturn(jsonData.getPersons());
-		when(fireStationRepository.getFireStations()).thenReturn(jsonData.getFirestations());
-		
-		List<String> phones = serviceController.phoneAlert(1);
 
-		assertThat(phones.get(0)).isEqualTo("841-874-6512");
-		assertThat(phones.get(1)).isEqualTo("841-874-8547");
-	}
-
-//	4ème Test
-	@Test
-	void fire() throws IOException {
-		when(personRepository.getPersons()).thenReturn(jsonData.getPersons());
-		when(fireStationRepository.getFireStations()).thenReturn(jsonData.getFirestations());
-		when(medicalRecordRepository.getMedicalRecords()).thenReturn(jsonData.getMedicalrecords());
-		
-		Fire fire = serviceController.fire("1509 Culver St");
-
-		assertThat(fire.getStation()).isEqualTo(3);
-		assertThat(fire.getFirePersons().get(0).getFirstName()).isEqualTo("Roger");
-		assertThat(fire.getFirePersons().get(0).getLastName()).isEqualTo("Boyd");
-		assertThat(fire.getFirePersons().get(0).getPhone()).isEqualTo("841-874-6512");
-		assertThat(fire.getFirePersons().get(0).getAge()).isEqualTo(6);
-	}
 
 	// 5ème Test
 	@Test
@@ -112,7 +73,7 @@ public class ServiceControllerTest {
 		List<Integer> stations = new ArrayList<Integer>();
 		stations.add(1);
 		stations.add(2);
-		Map<String, List<FloodPerson>> floods = serviceController.flood(stations);
+		Map<String, List<FloodPerson>> floods = serviceControllerPerson.flood(stations);
 
 		List<FloodPerson> floodPersons = floods.get("951 LoneTree Rd");
 		assertThat(floodPersons.get(0).getFirstName()).isEqualTo("Eric");
@@ -128,7 +89,7 @@ public class ServiceControllerTest {
 		when(personRepository.getPersons()).thenReturn(jsonData.getPersons());
 		when(medicalRecordRepository.getMedicalRecords()).thenReturn(jsonData.getMedicalrecords());
 
-		List<PersonInfo> personInfos = serviceController.personInfo("John", "Boyd");
+		List<PersonInfo> personInfos = serviceControllerPerson.personInfo("John", "Boyd");
 
 		assertThat(personInfos.get(0).getFirstName()).isEqualTo("John");
 		assertThat(personInfos.get(0).getLastName()).isEqualTo("Boyd");
@@ -141,7 +102,7 @@ public class ServiceControllerTest {
 	void communityEmail() throws IOException {
 		when(personRepository.getPersons()).thenReturn(jsonData.getPersons());
 		
-		List<String> emails = serviceController.communityEmail("Culver");
+		List<String> emails = serviceControllerPerson.communityEmail("Culver");
 
 		assertThat(emails.get(0)).isEqualTo("jaboyd@email.com");
 
