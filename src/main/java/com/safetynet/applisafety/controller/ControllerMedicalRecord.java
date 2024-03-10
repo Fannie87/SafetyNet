@@ -15,11 +15,10 @@ import com.safetynet.applisafety.model.json.MedicalRecord;
 
 @RestController
 public class ControllerMedicalRecord {
-	
 
 	@Autowired
 	private ServiceControllerMedicalRecord serviceControllerMedicalRecord;
-	
+
 	@PostMapping("/medicalRecord")
 	List<MedicalRecord> addMedicalRecord(@RequestBody MedicalRecord medicalRecordParam) throws IOException {
 		return serviceControllerMedicalRecord.addMedicalRecord(medicalRecordParam);
@@ -34,6 +33,5 @@ public class ControllerMedicalRecord {
 	List<MedicalRecord> deleteMedicalRecord(@RequestBody MedicalRecord medicalRecordParam) throws IOException {
 		return serviceControllerMedicalRecord.deleteMedicalRecord(medicalRecordParam);
 	}
-	
 
 }

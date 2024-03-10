@@ -22,25 +22,7 @@ import com.safetynet.applisafety.model.json.Person;
 
 @RestController
 public class ControllerPerson {
-	
-	@Autowired
-	private ServiceControllerPerson serviceControllerPerson;
-	
-	@PostMapping("/person")
-	List<Person> addPerson(@RequestBody Person personParam) throws IOException {
-		return serviceControllerPerson.addPerson(personParam);
-	}
-	
-	@PutMapping("/person")
-	List<Person> updatePerson(@RequestBody Person personParam) throws IOException {
-		return serviceControllerPerson.updatePerson(personParam);
-	}
-	
-	@DeleteMapping("/person")
-	List<Person> deletePerson(@RequestBody Person personParam) throws IOException {
-		return serviceControllerPerson.deletePerson(personParam);
-	}
-	
+
 	@GetMapping("/childAlert")
 	public List<ChildAlert> childAlert(@RequestParam @NonNull String address) throws IOException {
 		return serviceControllerPerson.childAlert(address);
@@ -51,7 +33,7 @@ public class ControllerPerson {
 			throws IOException {
 		return serviceControllerPerson.personInfo(firstName, lastName);
 	}
-	
+
 	@GetMapping("/communityEmail")
 	public List<String> communityEmail(@RequestParam @NonNull String city) throws IOException {
 		return serviceControllerPerson.communityEmail(city);
@@ -61,8 +43,23 @@ public class ControllerPerson {
 	public Map<String, List<FloodPerson>> flood(@RequestParam @NonNull List<Integer> stations) throws IOException {
 		return serviceControllerPerson.flood(stations);
 	}
-	
-	
-	
-	
+
+	@Autowired
+	private ServiceControllerPerson serviceControllerPerson;
+
+	@PostMapping("/person")
+	List<Person> addPerson(@RequestBody Person personParam) throws IOException {
+		return serviceControllerPerson.addPerson(personParam);
+	}
+
+	@PutMapping("/person")
+	List<Person> updatePerson(@RequestBody Person personParam) throws IOException {
+		return serviceControllerPerson.updatePerson(personParam);
+	}
+
+	@DeleteMapping("/person")
+	List<Person> deletePerson(@RequestBody Person personParam) throws IOException {
+		return serviceControllerPerson.deletePerson(personParam);
+	}
+
 }

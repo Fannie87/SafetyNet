@@ -21,6 +21,20 @@ import com.safetynet.applisafety.model.json.FireStation;
 @RestController
 public class ControllerFireStation {
 	
+	@GetMapping("/firestation")
+	public FireStationWithCountdown fireStations(@RequestParam @NonNull Integer stationNumber) throws IOException {
+		return serviceControllerFireStation.fireStations(stationNumber);
+	}
+	
+	@GetMapping("/fire")
+	public Fire fire(@RequestParam @NonNull String address) throws IOException {
+		return serviceControllerFireStation.fire(address);
+	}
+	
+	@GetMapping("/phoneAlert")
+	public List<String> phoneAlert(@RequestParam @NonNull Integer firestation) throws IOException {
+		return serviceControllerFireStation.phoneAlert(firestation);
+	}
 
 	@Autowired
 	private ServiceControllerFireStation serviceControllerFireStation;
@@ -41,18 +55,5 @@ public class ControllerFireStation {
 	}
 	
 	
-	@GetMapping("/firestation")
-	public FireStationWithCountdown fireStations(@RequestParam @NonNull Integer stationNumber) throws IOException {
-		return serviceControllerFireStation.fireStations(stationNumber);
-	}
-	
-	@GetMapping("/fire")
-	public Fire fire(@RequestParam @NonNull String address) throws IOException {
-		return serviceControllerFireStation.fire(address);
-	}
-	
-	@GetMapping("/phoneAlert")
-	public List<String> phoneAlert(@RequestParam @NonNull Integer firestation) throws IOException {
-		return serviceControllerFireStation.phoneAlert(firestation);
-	}
+
 }
