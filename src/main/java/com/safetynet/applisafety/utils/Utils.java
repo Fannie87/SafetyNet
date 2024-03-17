@@ -22,7 +22,7 @@ public class Utils {
 	}
 	
 	
-	public static LocalDate calculateBirthdate(MedicalRecord medicalRecord) {
+	public static LocalDate parseBirthdate(MedicalRecord medicalRecord) {
 		return LocalDate.parse(medicalRecord.getBirthdate(), formatter);
 	}
 

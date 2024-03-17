@@ -62,8 +62,8 @@ public class ServiceControllerPerson {
 				for (MedicalRecord medicalRecord : medicalRecords) {
 					if (person.getFirstName().equals(medicalRecord.getFirstName())
 							&& person.getLastName().equals(medicalRecord.getLastName())) {
-						if (Utils.calculateBirthdate(medicalRecord).isAfter(dateOfMajority)) {
-							int age = Period.between(Utils.calculateBirthdate(medicalRecord), LocalDate.now()).getYears();
+						if (Utils.parseBirthdate(medicalRecord).isAfter(dateOfMajority)) {
+							int age = Period.between(Utils.parseBirthdate(medicalRecord), LocalDate.now()).getYears();
 							ChildAlert childAlert = new ChildAlert();
 							childAlert.setFirstName(person.getFirstName());
 							childAlert.setLastName(person.getLastName());
@@ -80,8 +80,8 @@ public class ServiceControllerPerson {
 					for (MedicalRecord medicalRecord : medicalRecords) {
 						if (person.getFirstName().equals(medicalRecord.getFirstName())
 								&& person.getLastName().equals(medicalRecord.getLastName())
-								&& Utils.calculateBirthdate(medicalRecord).isBefore(dateOfMajority)) {
-							int age = Period.between(Utils.calculateBirthdate(medicalRecord), LocalDate.now()).getYears();
+								&& Utils.parseBirthdate(medicalRecord).isBefore(dateOfMajority)) {
+							int age = Period.between(Utils.parseBirthdate(medicalRecord), LocalDate.now()).getYears();
 							ChildAlert childAlert = new ChildAlert();
 							childAlert.setFirstName(person.getFirstName());
 							childAlert.setLastName(person.getLastName());
@@ -95,7 +95,6 @@ public class ServiceControllerPerson {
 
 		return childAlerts;
 	}
-
 
 	// 5ème URL
 	public Map<String, List<FloodPerson>> flood(List<Integer> stations) throws IOException {
@@ -114,7 +113,7 @@ public class ServiceControllerPerson {
 							if (fireStation.getAddress().equals(person.getAddress())
 									&& person.getFirstName().equals(medicalRecord.getFirstName())
 									&& person.getLastName().equals(medicalRecord.getLastName())) {
-								int age = Period.between(Utils.calculateBirthdate(medicalRecord), LocalDate.now()).getYears();
+								int age = Period.between(Utils.parseBirthdate(medicalRecord), LocalDate.now()).getYears();
 								FloodPerson floodPerson = new FloodPerson();
 
 								floodPerson.setFirstName(person.getFirstName());
@@ -155,7 +154,7 @@ public class ServiceControllerPerson {
 				for (MedicalRecord medicalRecord : medicalRecords) {
 					if (person.getFirstName().equals(medicalRecord.getFirstName())
 							&& person.getLastName().equals(medicalRecord.getLastName())) {
-						int age = Period.between(Utils.calculateBirthdate(medicalRecord), LocalDate.now()).getYears();
+						int age = Period.between(Utils.parseBirthdate(medicalRecord), LocalDate.now()).getYears();
 						PersonInfo personInfo = new PersonInfo();
 
 						personInfo.setFirstName(person.getFirstName());

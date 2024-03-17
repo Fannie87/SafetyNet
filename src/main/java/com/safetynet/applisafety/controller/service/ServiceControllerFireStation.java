@@ -73,7 +73,7 @@ public class ServiceControllerFireStation {
 			for (MedicalRecord medicalRecord : medicalRecords) {
 				if (person.getFirstName().equals(medicalRecord.getFirstName())
 						&& person.getLastName().equals(medicalRecord.getLastName())) {
-					if (Utils.calculateBirthdate(medicalRecord).isAfter(minDateToBeMajor)) {// mineur
+					if (Utils.parseBirthdate(medicalRecord).isAfter(minDateToBeMajor)) {// mineur
 						numberMinor++;
 					} else {
 						numberAdult++;
@@ -146,7 +146,7 @@ public class ServiceControllerFireStation {
 			String keyPerson = medicalRecord.getFirstName() + medicalRecord.getLastName();
 			if (mapPersonFound.containsKey(keyPerson)) {
 				FirePerson firePerson = mapPersonFound.get(keyPerson);
-				int age = Period.between(Utils.calculateBirthdate(medicalRecord), LocalDate.now()).getYears();
+				int age = Period.between(Utils.parseBirthdate(medicalRecord), LocalDate.now()).getYears();
 				firePerson.setAge(age);
 				firePerson.setMedications(medicalRecord.getMedications());
 				firePerson.setAllergies(medicalRecord.getAllergies());
