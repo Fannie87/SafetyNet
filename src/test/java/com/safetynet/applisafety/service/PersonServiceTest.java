@@ -1,4 +1,4 @@
-package com.safetynet.applisafety.controller.service;
+package com.safetynet.applisafety.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -19,17 +19,18 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.applisafety.controller.repository.FireStationRepository;
-import com.safetynet.applisafety.controller.repository.MedicalRecordRepository;
-import com.safetynet.applisafety.controller.repository.PersonRepository;
 import com.safetynet.applisafety.model.ChildAlert;
 import com.safetynet.applisafety.model.FloodPerson;
 import com.safetynet.applisafety.model.PersonInfo;
 import com.safetynet.applisafety.model.json.JsonData;
+import com.safetynet.applisafety.repository.FireStationRepository;
+import com.safetynet.applisafety.repository.MedicalRecordRepository;
+import com.safetynet.applisafety.repository.PersonRepository;
+import com.safetynet.applisafety.service.PersonService;
 @ExtendWith(MockitoExtension.class)
-public class ServiceControllerPersonTest {
+public class PersonServiceTest {
 	@InjectMocks
-	private ServiceControllerPerson serviceControllerPerson;
+	private PersonService serviceControllerPerson;
 
 	@Mock
 	private PersonRepository personRepository;

@@ -1,14 +1,14 @@
-package com.safetynet.applisafety.controller.repository;
+package com.safetynet.applisafety.repository;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.safetynet.applisafety.model.json.FireStation;
 import com.safetynet.applisafety.utils.Utils;
 
-@Service
+@Repository
 public class FireStationRepository {
 	
 	private List<FireStation> fireStations;

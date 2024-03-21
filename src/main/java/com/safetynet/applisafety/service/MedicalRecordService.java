@@ -1,4 +1,4 @@
-package com.safetynet.applisafety.controller.service;
+package com.safetynet.applisafety.service;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,11 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.safetynet.applisafety.controller.repository.MedicalRecordRepository;
 import com.safetynet.applisafety.model.json.MedicalRecord;
+import com.safetynet.applisafety.repository.MedicalRecordRepository;
 
 @Service
-public class ServiceControllerMedicalRecord {
+public class MedicalRecordService {
 	@Autowired
 	private MedicalRecordRepository medicalRecordRepository;
 	

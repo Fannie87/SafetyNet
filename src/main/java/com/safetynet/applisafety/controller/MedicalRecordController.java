@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safetynet.applisafety.controller.service.ServiceControllerMedicalRecord;
 import com.safetynet.applisafety.model.json.MedicalRecord;
+import com.safetynet.applisafety.service.MedicalRecordService;
 
 @RestController
-public class ControllerMedicalRecord {
+public class MedicalRecordController {
 
 	@Autowired
-	private ServiceControllerMedicalRecord serviceControllerMedicalRecord;
+	private MedicalRecordService serviceControllerMedicalRecord;
 
 	@PostMapping("/medicalRecord")
 	List<MedicalRecord> addMedicalRecord(@RequestBody MedicalRecord medicalRecordParam) throws IOException {

@@ -1,4 +1,4 @@
-package com.safetynet.applisafety.controller.service;
+package com.safetynet.applisafety.service;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -11,19 +11,19 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.safetynet.applisafety.controller.repository.FireStationRepository;
-import com.safetynet.applisafety.controller.repository.MedicalRecordRepository;
-import com.safetynet.applisafety.controller.repository.PersonRepository;
 import com.safetynet.applisafety.model.Fire;
 import com.safetynet.applisafety.model.FirePerson;
 import com.safetynet.applisafety.model.FireStationWithCountdown;
 import com.safetynet.applisafety.model.json.FireStation;
 import com.safetynet.applisafety.model.json.MedicalRecord;
 import com.safetynet.applisafety.model.json.Person;
+import com.safetynet.applisafety.repository.FireStationRepository;
+import com.safetynet.applisafety.repository.MedicalRecordRepository;
+import com.safetynet.applisafety.repository.PersonRepository;
 import com.safetynet.applisafety.utils.Utils;
 
 @Service
-public class ServiceControllerFireStation {
+public class FireStationService {
 	
 	@Autowired
 	private FireStationRepository fireStationRepository;

@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safetynet.applisafety.controller.service.ServiceControllerFireStation;
 import com.safetynet.applisafety.model.Fire;
 import com.safetynet.applisafety.model.FireStationWithCountdown;
 import com.safetynet.applisafety.model.json.FireStation;
+import com.safetynet.applisafety.service.FireStationService;
 
 @RestController
-public class ControllerFireStation {
+public class FireStationController {
 	@Autowired
-	private ServiceControllerFireStation serviceControllerFireStation;
+	private FireStationService serviceControllerFireStation;
 	
 	@GetMapping("/firestation")
 	public FireStationWithCountdown fireStations(@RequestParam @NonNull Integer stationNumber) throws IOException {

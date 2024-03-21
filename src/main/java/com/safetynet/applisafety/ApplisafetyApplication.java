@@ -5,9 +5,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.safetynet.applisafety.controller.repository.FireStationRepository;
-import com.safetynet.applisafety.controller.repository.MedicalRecordRepository;
-import com.safetynet.applisafety.controller.repository.PersonRepository;
+import com.safetynet.applisafety.repository.FireStationRepository;
+import com.safetynet.applisafety.repository.MedicalRecordRepository;
+import com.safetynet.applisafety.repository.PersonRepository;
 
 @SpringBootApplication
 public class ApplisafetyApplication implements CommandLineRunner {

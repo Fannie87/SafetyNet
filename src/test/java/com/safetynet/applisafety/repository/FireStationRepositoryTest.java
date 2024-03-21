@@ -1,4 +1,4 @@
-package com.safetynet.applisafety.controller.repository;
+package com.safetynet.applisafety.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.safetynet.applisafety.model.json.FireStation;
+import com.safetynet.applisafety.repository.FireStationRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class FireStationRepositoryTest {

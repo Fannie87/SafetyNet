@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safetynet.applisafety.controller.service.ServiceControllerPerson;
 import com.safetynet.applisafety.model.ChildAlert;
 import com.safetynet.applisafety.model.FloodPerson;
 import com.safetynet.applisafety.model.PersonInfo;
 import com.safetynet.applisafety.model.json.Person;
+import com.safetynet.applisafety.service.PersonService;
 
 @RestController
-public class ControllerPerson {
+public class PersonController {
 
 	@GetMapping("/childAlert")
 	public List<ChildAlert> childAlert(@RequestParam @NonNull String address) throws IOException {
@@ -45,7 +45,7 @@ public class ControllerPerson {
 	}
 
 	@Autowired
-	private ServiceControllerPerson serviceControllerPerson;
+	private PersonService serviceControllerPerson;
 
 	@PostMapping("/person")
 	List<Person> addPerson(@RequestBody Person personParam) throws IOException {

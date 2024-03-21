@@ -1,4 +1,4 @@
-package com.safetynet.applisafety.controller.service;
+package com.safetynet.applisafety.service;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -12,19 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.safetynet.applisafety.controller.repository.FireStationRepository;
-import com.safetynet.applisafety.controller.repository.MedicalRecordRepository;
-import com.safetynet.applisafety.controller.repository.PersonRepository;
 import com.safetynet.applisafety.model.ChildAlert;
 import com.safetynet.applisafety.model.FloodPerson;
 import com.safetynet.applisafety.model.PersonInfo;
 import com.safetynet.applisafety.model.json.FireStation;
 import com.safetynet.applisafety.model.json.MedicalRecord;
 import com.safetynet.applisafety.model.json.Person;
+import com.safetynet.applisafety.repository.FireStationRepository;
+import com.safetynet.applisafety.repository.MedicalRecordRepository;
+import com.safetynet.applisafety.repository.PersonRepository;
 import com.safetynet.applisafety.utils.Utils;
 
 @Service
-public class ServiceControllerPerson {
+public class PersonService {
 
 	@Autowired
 	private FireStationRepository fireStationRepository;
